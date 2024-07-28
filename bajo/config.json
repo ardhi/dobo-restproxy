@@ -1,0 +1,4 @@
+{
+  "alias": "dbrpx",
+  "dependencies": ["dobo", "bajo-extra"]
+}

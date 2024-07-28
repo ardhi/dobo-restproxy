@@ -1,0 +1,6 @@
+{
+  "Base url must be provided": "Basis url harus diberikan",
+  "Url for '%s' must have a '{modelName}' pattern": "Url untuk '%s' harus memiliki pattern berupa '{modelName}'",
+  "Url for '%s' must have a '{id}' pattern'": "Url untuk '%s' harus memiliki pattern berupa '{id}'",
+  "Unsupported method/feature": "Metode/fitur tidak didukung"
+}

@@ -9,7 +9,7 @@ async function driver () {
     if (isString(cfg.type)) cfg.type = [cfg.type]
     cfg.type = cfg.type.map(t => `${t}@${ns}`)
     type.push(...cfg.type)
-  }, { glob: 'boot/driver.json', baseNs: this.name })
+  }, { glob: 'boot/driver.json', prefix: this.name })
   return { type, driver }
 }
 

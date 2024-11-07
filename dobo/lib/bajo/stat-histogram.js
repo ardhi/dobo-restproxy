@@ -2,7 +2,6 @@ import prepFetch from './_prep-fetch.js'
 
 async function statHistogram ({ schema, filter = {}, options = {} } = {}) {
   const { get, has, isPlainObject } = this.app.bajo.lib._
-  const { fetch } = this.app.bajoExtra
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   const cfg = connection.options ?? {}
@@ -16,7 +15,7 @@ async function statHistogram ({ schema, filter = {}, options = {} } = {}) {
       opts.params[cfg.qsKey[k]] = val
     }
   }
-  const resp = await fetch(url, opts)
+  const resp = await this.fetch(url, opts)
   return {
     data: resp[get(cfg, 'responseKey.data')],
     page: resp[get(cfg, 'responseKey.page')],

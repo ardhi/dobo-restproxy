@@ -1,6 +1,7 @@
 import transform from './transform.js'
 
 async function prepFetch (schema, action, id, body) {
+  const { callHandler } = this.app.bajo
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   const conn = connection.connection
@@ -8,7 +9,9 @@ async function prepFetch (schema, action, id, body) {
   const ext = conn.extra ?? {}
   if (!conn.url[action]) throw this.error('Method \'%s@%s\' is disabled', action, schema.name)
   let [method, url] = conn.url[action].split(':')
-  url = `${conn.url.base}/${url}`.replace('{modelName}', schema.modelName)
+  let name = schema.name
+  if (connection.modelResolver) name = await callHandler(connection.modelResolver, name)
+  url = `${conn.url.base}/${url}`.replace('{modelName}', name)
   if (body) opts.body = await transform.call(this, body, schema, true)
   if (id) url = url.replace('{id}', id)
   opts.method = method.toLowerCase()

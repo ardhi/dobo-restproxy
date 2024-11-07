@@ -6,7 +6,6 @@ async function recordGet ({ schema, id, options = {} } = {}) {
   const { importModule } = this.app.bajo
   const { isFunction, get } = this.app.bajo.lib._
   const { getInfo } = this.app.dobo
-  const { fetch } = this.app.bajoExtra
   const { driver, connection } = getInfo(schema)
   const { dataOnly, responseKey } = connection.options
   const { noTransform = false } = options
@@ -16,7 +15,7 @@ async function recordGet ({ schema, id, options = {} } = {}) {
   let { url, opts, ext } = await prepFetch.call(this, schema, 'get', id)
   let resp
   if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[driver.ns], { url, opts, ext, schema, id, options }))
-  if (!resp) resp = await fetch(url, opts, ext)
+  if (!resp) resp = await this.fetch(url, opts, ext)
   const result = {
     data: dataOnly === true || (Array.isArray(dataOnly) && dataOnly.includes('get')) ? resp : resp[get(responseKey, 'data')]
   }

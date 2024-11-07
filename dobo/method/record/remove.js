@@ -6,7 +6,6 @@ import fetchGet from './get.js'
 async function recordRemove ({ schema, id, options = {} } = {}) {
   const { importModule } = this.app.bajo
   const { get, isFunction, merge } = this.app.bajo.lib._
-  const { fetch } = this.app.bajoExtra
   const { getInfo } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, oldData, responseKey } = connection.options
@@ -19,7 +18,7 @@ async function recordRemove ({ schema, id, options = {} } = {}) {
   let oldResp
   merge(options, { noTransform: true })
   if (oldData === false) oldResp = await fetchGet.call(this, { schema, id, options })
-  if (!resp) resp = await fetch(url, opts, ext)
+  if (!resp) resp = await this.fetch(url, opts, ext)
   const result = {}
   if (oldData === false) {
     result.oldData = oldResp[get(responseKey, 'data')]

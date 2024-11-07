@@ -3,10 +3,9 @@ import prepFetch from '../../generic/prep-fetch.js'
 import transform from '../../generic/transform.js'
 
 async function recordFind ({ schema, filter = {}, options = {} } = {}) {
-  const { importModule } = this.app.bajo
+  const { importModule, isSet } = this.app.bajo
   const { get, has, isPlainObject, invert, isFunction } = this.app.bajo.lib._
   const { getInfo, prepPagination } = this.app.dobo
-  const { fetch } = this.app.bajoExtra
   const { driver, connection } = getInfo(schema)
   const { dataOnly, qsKey, responseKey } = connection.options
   const prefix = driver.provider ? `${driver.provider}:/doboRestproxy` : 'doboRestproxy:/dobo'
@@ -27,10 +26,11 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   for (const k in qsKey) {
     if (has(filter, k)) {
       const val = isPlainObject(filter[k]) ? JSON.stringify(filter[k]) : filter[k]
+      if (!isSet(val)) continue
       opts.params[qsKey[k]] = val
     }
   }
-  if (!resp) resp = await fetch(url, opts, ext)
+  if (!resp) resp = await this.fetch(url, opts, ext)
   const result = {
     data: dataOnly === true || (Array.isArray(dataOnly) && dataOnly.includes('find')) ? resp : resp[get(responseKey, 'data')],
     page: resp[get(responseKey, 'page')] ?? filter.page,

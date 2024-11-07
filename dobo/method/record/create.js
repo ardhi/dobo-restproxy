@@ -6,7 +6,6 @@ import fetchGet from './get.js'
 async function recordCreate ({ schema, body, options = {} } = {}) {
   const { importModule } = this.app.bajo
   const { get, isFunction, merge } = this.app.bajo.lib._
-  const { fetch } = this.app.bajoExtra
   const { getInfo } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, data, responseKey } = connection.options
@@ -16,7 +15,7 @@ async function recordCreate ({ schema, body, options = {} } = {}) {
   let { url, opts, ext } = await prepFetch.call(this, schema, 'create', undefined, body)
   let resp
   if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[driver.ns], { url, opts, ext, schema, body, options }))
-  if (!resp) resp = await fetch(url, opts, ext)
+  if (!resp) resp = await this.fetch(url, opts, ext)
   merge(options, { noTransform: true })
   if (data === false) resp = await fetchGet.call(this, { schema, id: body.id, options }) // TODO: case for autocreate id???
   const result = {

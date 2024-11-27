@@ -8,6 +8,8 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   const { getInfo, prepPagination } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, qsKey, responseKey } = connection.options
+  options.altRels = options.rels
+  delete options.rels
   const prefix = driver.provider ? `${driver.provider}:/doboRestproxy` : 'doboRestproxy:/dobo'
   const mod = await importModule(`${prefix}/lib/${driver.type}/record-find.js`)
   if (!mod) return unsupported.call(this)

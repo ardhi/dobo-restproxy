@@ -17,6 +17,7 @@ async function prepFetch (schema, action, id, body) {
   opts.method = method.toLowerCase()
   opts.headers = opts.headers ?? {}
   opts.params = opts.params ?? {}
+  delete opts.headers['X-Rels']
   switch (conn.auth) {
     case 'basic': opts.auth = { username: conn.username, password: conn.password }; break
     case 'apiKey': opts.headers.Authorization = `Bearer ${conn.apiKey}`; break

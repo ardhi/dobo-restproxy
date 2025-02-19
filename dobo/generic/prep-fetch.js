@@ -7,7 +7,7 @@ async function prepFetch (schema, action, id, body) {
   const conn = connection.connection
   const opts = conn.options ?? {}
   const ext = conn.extra ?? {}
-  if (!conn.url[action]) throw this.error('Method \'%s@%s\' is disabled', action, schema.name)
+  if (!conn.url[action]) throw this.error('methodIsDisabled%s%s', action, schema.name)
   let [method, url] = conn.url[action].split(':')
   let name = schema.name
   if (connection.modelResolver) name = await callHandler(connection.modelResolver, name)

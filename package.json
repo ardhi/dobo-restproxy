@@ -1,6 +1,6 @@
 {
   "name": "dobo-restproxy",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "REST Api Proxy driver for Dobo",
   "main": "index.js",
   "scripts": {

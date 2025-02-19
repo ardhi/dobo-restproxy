@@ -1,0 +1,6 @@
+{
+  "baseUrlMissing": "Base url is missing",
+  "urlPattern%s": "Url for '%s' must have a '{modelName}' pattern",
+  "urlIdPattern%s": "Url for '%s' must have a '{id}' pattern'",
+  "unsupportedMethodFeature": "Unsupported method/feature"
+}

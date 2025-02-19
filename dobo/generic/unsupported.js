@@ -1,5 +1,5 @@
 function unsupported () {
-  throw this.error('Unsupported method/feature')
+  throw this.error('unsupportedMethodFeature')
 }
 
 export default unsupported

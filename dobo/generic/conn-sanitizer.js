@@ -23,7 +23,7 @@ async function connSanitizer (conn, keys) {
     }
     conn.connection.url = url
   } else if (isPlainObject((conn.connection.url))) {
-    if (!conn.connection.url.base) throw this.error('Base url must be provided')
+    if (!conn.connection.url.base) throw this.error('baseUrlMissing')
     conn.connection.url.base = trimEnd(conn.connection.url.base.trim(), '/')
     for (const method in methods) {
       if (!conn.connection.url[method]) continue
@@ -33,20 +33,20 @@ async function connSanitizer (conn, keys) {
         m = methods[method]
       }
       u = trimStart(u, '/')
-      if (!u.includes('{modelName}')) throw this.error('Url for \'%s\' must have a \'{modelName}\' pattern', method)
-      if (['get', 'update', 'remove'].includes(method) && !u.includes('{id}')) throw this.error('Url for \'%s\' must have a \'{id}\' pattern', method)
+      if (!u.includes('{modelName}')) throw this.error('urlPattern%s', method)
+      if (['get', 'update', 'remove'].includes(method) && !u.includes('{id}')) throw this.error('urlIdPattern%s', method)
       conn.connection.url[method] = `${m}:${u}`
     }
   }
   conn.connection.auth = conn.connection.auth ?? 'apiKey'
   if (conn.connection.auth !== false) {
-    if (!authTypes.includes(conn.connection.auth)) throw this.error('Only support one of these: %s', join(authTypes))
+    if (!authTypes.includes(conn.connection.auth)) throw this.error('onlySupportThese%s', join(authTypes))
     switch (conn.connection.auth) {
-      case 'apiKey': if (!conn.connection.apiKey) throw this.error('Api key is missing'); break
-      case 'jwt': if (!conn.connection.jwt) throw this.error('JWT is missing'); break
+      case 'apiKey': if (!conn.connection.apiKey) throw this.error('isMissing%s', this.print.write('field.apiKey')); break
+      case 'jwt': if (!conn.connection.jwt) throw this.error('isMissing%s', this.print.write('field.jwt')); break
       case 'basic':
-        if (!conn.connection.username) throw this.error('Username is missing')
-        if (!conn.connection.password) throw this.error('Password is missing')
+        if (!conn.connection.username) throw this.error('isMissing%s', this.print.write('field.username'))
+        if (!conn.connection.password) throw this.error('isMissing%s', this.print.write('field.password'))
         break
     }
   }

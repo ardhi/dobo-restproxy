@@ -5,7 +5,7 @@ import fetchGet from './get.js'
 
 async function recordRemove ({ schema, id, options = {} } = {}) {
   const { importModule } = this.app.bajo
-  const { get, isFunction, merge } = this.app.bajo.lib._
+  const { get, isFunction, merge } = this.lib._
   const { getInfo } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, oldData, responseKey } = connection.options

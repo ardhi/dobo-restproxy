@@ -8,7 +8,7 @@ const defKeys = {
 async function connSanitizer (conn, keys) {
   if (!keys) keys = defKeys
   const { join } = this.app.bajo
-  const { get, set, trimEnd, trimStart, isString, isPlainObject } = this.app.bajo.lib._
+  const { get, set, trimEnd, trimStart, isString, isPlainObject } = this.lib._
   conn.proxy = true
   conn.connection = conn.connection ?? {}
   conn.connection.url = conn.connection.url ?? {}

@@ -4,7 +4,7 @@ import transform from '../../generic/transform.js'
 
 async function recordGet ({ schema, id, options = {} } = {}) {
   const { importModule } = this.app.bajo
-  const { isFunction, get } = this.app.bajo.lib._
+  const { isFunction, get } = this.lib._
   const { getInfo } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, responseKey } = connection.options

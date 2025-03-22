@@ -10,7 +10,7 @@ async function prepFetch (schema, action, id, body) {
   if (!conn.url[action]) throw this.error('methodIsDisabled%s%s', action, schema.name)
   let [method, url] = conn.url[action].split(':')
   let name = schema.name
-  if (connection.modelResolver) name = await callHandler(connection.modelResolver, name)
+  if (connection.modelResolver) name = await callHandler(this, connection.modelResolver, name)
   url = `${conn.url.base}/${url}`.replace('{modelName}', name)
   if (body) opts.body = await transform.call(this, body, schema, true)
   if (id) url = url.replace('{id}', id)

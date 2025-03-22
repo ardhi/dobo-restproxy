@@ -4,7 +4,7 @@ import transform from '../../generic/transform.js'
 
 async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   const { importModule, isSet } = this.app.bajo
-  const { get, has, isPlainObject, invert, isFunction } = this.app.bajo.lib._
+  const { get, has, isPlainObject, invert, isFunction } = this.lib._
   const { getInfo, prepPagination } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, qsKey, responseKey } = connection.options

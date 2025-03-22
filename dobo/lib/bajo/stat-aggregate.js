@@ -1,7 +1,7 @@
 import prepFetch from './_prep-fetch.js'
 
 async function statAggregate ({ schema, filter = {}, options = {} } = {}) {
-  const { get, has, isPlainObject } = this.app.bajo.lib._
+  const { get, has, isPlainObject } = this.lib._
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   const cfg = connection.options ?? {}

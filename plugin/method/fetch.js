@@ -1,7 +1,7 @@
 async function fetch (url, opts = {}, extra = {}) {
-  const { fetch } = this.app.bajoExtra
+  const { fetchUrl } = this.app.bajoExtra
   extra.rawResponse = true
-  const resp = await fetch(url, opts, extra)
+  const resp = await fetchUrl(url, opts, extra)
   const result = await resp.json()
   if (!resp.ok) {
     throw this.error(result.message, {

@@ -1,20 +1,22 @@
-import prepFetch from './_prep-fetch.js'
+import prepFetch from '../../generic/prep-fetch.js'
+import { sanitizeOpts } from './record-find.js'
+import path from 'path'
 
 async function statAggregate ({ schema, filter = {}, options = {} } = {}) {
-  const { get, has, isPlainObject } = this.lib._
+  const { get, isArray } = this.lib._
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   const cfg = connection.options ?? {}
   const { url, opts } = await prepFetch.call(this, schema, 'find')
   if (options.count) opts.headers['X-Count'] = true
   opts.params = opts.params ?? {}
-  for (const k in cfg.qsKey) {
-    if (has(filter, k)) {
-      const val = isPlainObject(filter[k]) ? JSON.stringify(filter[k]) : filter[k]
-      opts.params[cfg.qsKey[k]] = val
-    }
-  }
-  const resp = await this.fetch(url, opts)
+  sanitizeOpts.call(this, { filter, cfg, opts })
+  opts.params.group = filter.group
+  opts.params.aggregate = filter.aggregate
+  opts.params.fields = filter.fields
+  if (isArray(opts.params.fields)) opts.params.fields = opts.params.fields.join(',')
+  const ext = path.extname(url)
+  const resp = await this.fetch(url.replace(ext, '') + '/stat/aggregate' + ext, opts)
   return {
     data: resp[get(cfg, 'responseKey.data')],
     page: resp[get(cfg, 'responseKey.page')],

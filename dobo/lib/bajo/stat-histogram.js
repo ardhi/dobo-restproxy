@@ -18,7 +18,12 @@ async function statHistogram ({ schema, filter = {}, options = {} } = {}) {
   opts.params.fields = filter.fields
   if (isArray(opts.params.fields)) opts.params.fields = opts.params.fields.join(',')
   const ext = path.extname(url)
-  const resp = await this.fetch(url.replace(ext, '') + '/stat/histogram' + ext, opts)
+  let resp
+  try {
+    resp = await this.fetch(url.replace(ext, '') + '/stat/histogram' + ext, opts)
+  } catch (err) {
+    console.log(err)
+  }
   return {
     data: resp[get(cfg, 'responseKey.data')],
     page: resp[get(cfg, 'responseKey.page')],

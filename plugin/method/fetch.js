@@ -5,6 +5,7 @@ async function fetch (url, opts = {}, extra = {}) {
   const result = await resp.json()
   if (!resp.ok) {
     throw this.error(result.message, {
+      noTrans: true,
       statusCode: resp.status,
       success: false
     })

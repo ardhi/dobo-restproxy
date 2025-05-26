@@ -15,11 +15,15 @@ export function sanitizeOpts ({ filter, cfg, opts }) {
 }
 
 async function recordFind ({ url, opts, schema, filter, options } = {}) {
+  const { isString } = this.lib._
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   const cfg = connection.options ?? {}
   if (options.count) opts.headers['X-Count'] = true
-  if (options.altRels) opts.headers['X-Rels'] = options.altRels.join(',')
+  if (options.altRels) {
+    if (isString(options.altRels)) options.altRels = [options.altRels]
+    opts.headers['X-Rels'] = options.altRels.join(',')
+  }
   sanitizeOpts.call(this, { filter, cfg, opts })
   return { url, opts }
 }

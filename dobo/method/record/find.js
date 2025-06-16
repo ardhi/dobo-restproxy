@@ -3,7 +3,8 @@ import prepFetch from '../../generic/prep-fetch.js'
 import transform from '../../generic/transform.js'
 
 async function recordFind ({ schema, filter = {}, options = {} } = {}) {
-  const { importModule, isSet } = this.app.bajo
+  const { isSet } = this.lib.aneka
+  const { importModule } = this.app.bajo
   const { get, has, isPlainObject, invert, isFunction } = this.lib._
   const { getInfo, prepPagination } = this.app.dobo
   const { driver, connection } = getInfo(schema)

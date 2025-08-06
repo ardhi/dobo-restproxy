@@ -9,7 +9,7 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   const { getInfo, prepPagination } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, qsKey, responseKey } = connection.options
-  if (filter.oquery) filter.query = filter.oquery
+  if (filter.orgQuery) filter.query = filter.orgQuery
   options.altRels = options.rels
   delete options.rels
   const prefix = driver.provider ? `${driver.provider}:/doboRestproxy` : 'doboRestproxy:/dobo'

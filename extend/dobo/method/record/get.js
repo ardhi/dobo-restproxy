@@ -9,7 +9,7 @@ async function recordGet ({ schema, id, options = {} } = {}) {
   const { driver, connection } = getInfo(schema)
   const { dataOnly, responseKey } = connection.options
   const { noTransform = false } = options
-  const prefix = driver.provider ? `${driver.provider}:/doboRestproxy` : 'doboRestproxy:/dobo'
+  const prefix = driver.provider ? `${driver.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
   const mod = await importModule(`${prefix}/lib/${driver.type}/record-get.js`)
   if (!mod) return unsupported.call(this)
   let { url, opts, ext } = await prepFetch.call(this, schema, 'get', id)

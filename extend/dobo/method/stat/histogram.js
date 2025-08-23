@@ -9,7 +9,7 @@ async function statHistogram ({ schema, filter = {}, options = {} } = {}) {
   filter.type = get(options, 'type')
   filter.group = get(options, 'group')
   filter.aggregate = get(options, 'aggregate')
-  const prefix = driver.provider ? `${driver.provider}:/doboRestproxy` : 'doboRestproxy:/dobo'
+  const prefix = driver.provider ? `${driver.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
   const mod = await importModule(`${prefix}/lib/${driver.type}/stat-histogram.js`)
   if (!mod) return unsupported.call(this)
   return await mod.call(this.app[driver.ns], { schema, filter, options })

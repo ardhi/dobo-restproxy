@@ -3,7 +3,8 @@ async function driver () {
   const { isString } = this.lib._
   const type = ['bajo', 'custom']
   const driver = 'restproxy'
-  await eachPlugins(async function ({ file, ns }) {
+  await eachPlugins(async function ({ file }) {
+    const { name: ns } = this
     const cfg = readJson(file)
     if (!cfg.type) return undefined
     if (isString(cfg.type)) cfg.type = [cfg.type]

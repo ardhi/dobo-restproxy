@@ -12,7 +12,7 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   if (filter.orgQuery) filter.query = filter.orgQuery
   options.altRels = options.rels
   delete options.rels
-  const prefix = driver.provider ? `${driver.provider}:/doboRestproxy` : 'doboRestproxy:/dobo'
+  const prefix = driver.provider ? `${driver.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
   const mod = await importModule(`${prefix}/lib/${driver.type}/record-find.js`)
   if (!mod) return unsupported.call(this)
   let { url, opts, ext } = await prepFetch.call(this, schema, 'find')

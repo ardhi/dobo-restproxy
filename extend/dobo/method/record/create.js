@@ -9,7 +9,7 @@ async function recordCreate ({ schema, body, options = {} } = {}) {
   const { getInfo } = this.app.dobo
   const { driver, connection } = getInfo(schema)
   const { dataOnly, data, responseKey } = connection.options
-  const prefix = driver.provider ? `${driver.provider}:/doboRestproxy` : 'doboRestproxy:/dobo'
+  const prefix = driver.provider ? `${driver.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
   const mod = await importModule(`${prefix}/lib/${driver.type}/record-create.js`)
   if (!mod) return unsupported.call(this)
   let { url, opts, ext } = await prepFetch.call(this, schema, 'create', undefined, body)

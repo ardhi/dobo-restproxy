@@ -4,7 +4,7 @@ async function statHistogram ({ schema, filter = {}, options = {} } = {}) {
   const { importModule } = this.app.bajo
   const { getInfo } = this.app.dobo
   const { driver } = getInfo(schema)
-  const { get } = this.lib._
+  const { get } = this.app.lib._
   filter.fields = get(options, 'fields')
   filter.type = get(options, 'type')
   filter.group = get(options, 'group')

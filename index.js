@@ -1,7 +1,7 @@
 async function factory (pkgName) {
   const me = this
 
-  class DoboRestproxy extends this.lib.Plugin {
+  class DoboRestproxy extends this.app.pluginClass.base {
     static dependencies = ['dobo', 'bajo-extra']
     static alias = 'dbrpx'
 

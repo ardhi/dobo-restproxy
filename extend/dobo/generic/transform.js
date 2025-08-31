@@ -1,5 +1,5 @@
 function mapFields (data, conn, reverse) {
-  const { get, invert } = this.lib._
+  const { get, invert } = this.app.lib._
   const fm = invert(conn.fieldsMap)
   const newData = {}
   for (const key in data) {
@@ -12,7 +12,7 @@ function mapFields (data, conn, reverse) {
 async function transform (data, schema, reverse) {
   const { callHandler } = this.app.bajo
   const { getInfo } = this.app.dobo
-  const { isString } = this.lib._
+  const { isString } = this.app.lib._
   const { connection } = getInfo(schema)
   const arr = Array.isArray(data)
   if (!arr) data = [data]

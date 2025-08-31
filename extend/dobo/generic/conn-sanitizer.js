@@ -8,7 +8,7 @@ const defKeys = {
 async function connSanitizer (conn, keys) {
   if (!keys) keys = defKeys
   const { join } = this.app.bajo
-  const { get, set, trimEnd, trimStart, isString, isPlainObject } = this.lib._
+  const { get, set, trimEnd, trimStart, isString, isPlainObject } = this.app.lib._
   conn.proxy = true
   conn.connection = conn.connection ?? {}
   conn.connection.url = conn.connection.url ?? {}
@@ -42,11 +42,11 @@ async function connSanitizer (conn, keys) {
   if (conn.connection.auth !== false) {
     if (!authTypes.includes(conn.connection.auth)) throw this.error('onlySupportThese%s', join(authTypes))
     switch (conn.connection.auth) {
-      case 'apiKey': if (!conn.connection.apiKey) throw this.error('isMissing%s', this.print.write('field.apiKey')); break
-      case 'jwt': if (!conn.connection.jwt) throw this.error('isMissing%s', this.print.write('field.jwt')); break
+      case 'apiKey': if (!conn.connection.apiKey) throw this.error('isMissing%s', this.t('field.apiKey')); break
+      case 'jwt': if (!conn.connection.jwt) throw this.error('isMissing%s', this.t('field.jwt')); break
       case 'basic':
-        if (!conn.connection.username) throw this.error('isMissing%s', this.print.write('field.username'))
-        if (!conn.connection.password) throw this.error('isMissing%s', this.print.write('field.password'))
+        if (!conn.connection.username) throw this.error('isMissing%s', this.t('field.username'))
+        if (!conn.connection.password) throw this.error('isMissing%s', this.t('field.password'))
         break
     }
   }

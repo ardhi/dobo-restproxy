@@ -1,5 +1,5 @@
 export function sanitizeOpts ({ filter, cfg, opts }) {
-  const { has, isPlainObject } = this.lib._
+  const { has, isPlainObject } = this.app.lib._
   const sorts = []
   for (const s in filter.sort ?? {}) {
     sorts.push(`${s}:${filter.sort[s]}`)
@@ -15,7 +15,7 @@ export function sanitizeOpts ({ filter, cfg, opts }) {
 }
 
 async function recordFind ({ url, opts, schema, filter, options } = {}) {
-  const { isString } = this.lib._
+  const { isString } = this.app.lib._
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   const cfg = connection.options ?? {}

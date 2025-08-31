@@ -3,7 +3,7 @@ import { sanitizeOpts } from './record-find.js'
 import path from 'path'
 
 async function statAggregate ({ schema, filter = {}, options = {} } = {}) {
-  const { get, isArray } = this.lib._
+  const { get, isArray } = this.app.lib._
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   const cfg = connection.options ?? {}

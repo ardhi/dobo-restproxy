@@ -1,7 +1,7 @@
 async function factory (action, params = {}) {
   let { url, opts, schema, body, options } = params
   const { callHandler } = this.app.bajo
-  const { get, camelCase } = this.lib._
+  const { get, camelCase } = this.app.lib._
   const { getInfo } = this.app.dobo
   const { connection } = getInfo(schema)
   if ((connection.disabled ?? []).includes(action)) return false

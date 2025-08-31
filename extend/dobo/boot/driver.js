@@ -1,6 +1,6 @@
 async function driver () {
   const { eachPlugins, readJson } = this.app.bajo
-  const { isString } = this.lib._
+  const { isString } = this.app.lib._
   const type = ['bajo', 'custom']
   const driver = 'restproxy'
   await eachPlugins(async function ({ file }) {

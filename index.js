@@ -1,6 +1,17 @@
+/**
+ * Plugin factory
+ *
+ * @param {string} pkgName - NPM package name
+ * @returns {class}
+ */
 async function factory (pkgName) {
   const me = this
 
+  /**
+   * DoboRestproxy class
+   *
+   * @class
+   */
   class DoboRestproxy extends this.app.pluginClass.base {
     static dependencies = ['dobo', 'bajo-extra']
     static alias = 'dbrpx'

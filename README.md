@@ -1,22 +1,25 @@
 # dobo-restproxy
 
-Plugin name: **doboRestproxy**, alias: **dbrpx**
-
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/ardhi/dobo-restproxy) ![NPM Version](https://img.shields.io/npm/v/dobo-restproxy)
 
-> <br />**Attention**: I do NOT accept any pull request at the moment, thanks!<br /><br />
+> <br />**Attention**: I do NOT accept any pull requests at the moment, thanks! ([Why?](https://github.com/ardhi/bajo/blob/main/tutorial/00-welcome.md#contribution))<br /><br />
 
-Rest API Proxy driver for [Dobo](https://github.com/ardhi/dobo)
+CouchDB driver for [Dobo](https://github.com/ardhi/dobo)
 
 ## Installation
 
-Goto your ```<bajo-base-dir>``` and type:
+First, go to your ```{app-dir}``` and run the following command in your terminal:
 
 ```bash
-$ npm install dobo-restproxy
+$ npm install dobo dobo-restproxy
 ```
 
-Now open your ```<bajo-data-dir>/config/.plugins``` and put ```dobo-restproxy``` in it
+Next, open the file located at ```{data-dir}/config/.plugins``` and add ```dobo``` and ```dobo-restproxy```
+
+## Documentations
+
+- [Config Object](tutorial/00-config.md)
+- [API](https://ardhi.github.io/dobo-restproxy)
 
 ## License
 

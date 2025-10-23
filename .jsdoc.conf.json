@@ -6,23 +6,22 @@
     "verbose": true,
     "destination": "./docs",
     "template": "node_modules/clean-jsdoc-theme",
-    "tutorials": "./tutorial",
-    "readme": "../shared/static/home.md",
+    "readme": "./docs/static/home.md",
     "theme_opts": {
       "default_theme": "light",
       "display-module-header": true,
-      "title": "Dobo's REST Proxy Driver",
-      "homepageTitle": "Dobo's REST Proxy Driver",
-      "sections": ["Tutorials", "Classes", "Events", "Modules", "Global"],
+      "title": "DoboRestproxy API",
+      "homepageTitle": "DoboRestproxy API",
+      "sections": ["Classes", "Events", "Modules", "Global"],
       "menu": [{
-        "title": "Dobo",
-        "link": "https://bajo.app/dobo"
-      }, {
         "title": "NPM",
         "link": "https://www.npmjs.com/package/dobo-restproxy"
       }, {
         "title": "Github",
         "link": "https://github.com/ardhi/dobo-restproxy"
+      }, {
+        "title": "Dobo",
+        "link": "https://bajo.app/dobo"
       }, {
         "title": "Bajo",
         "link": "https://bajo.app"

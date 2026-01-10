@@ -1,6 +1,6 @@
 {
   "name": "dobo-restproxy",
-  "version": "2.0.1",
+  "version": "2.2.0",
   "description": "REST Api Proxy driver for Dobo",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,9 @@
   },
   "type": "module",
   "bajo": {
-    "type": "plugin"
+    "type": "plugin",
+    "alias": "dbrpx",
+    "dependencies": ["dobo", "bajo-extra"]
   },
   "repository": {
     "type": "git",

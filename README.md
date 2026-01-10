@@ -8,13 +8,13 @@ REST Proxy driver for [Dobo](https://github.com/ardhi/dobo)
 
 ## Installation
 
-First, go to your ```{app-dir}``` and run the following command in your terminal:
+First, go to your ```{appDir}``` and run the following command in your terminal:
 
 ```bash
 $ npm install dobo dobo-restproxy
 ```
 
-Next, open the file located at ```{data-dir}/config/.plugins``` and add ```dobo``` and ```dobo-restproxy```
+And enable the plugin by adding ```dobo``` and ```dobo-restproxy``` to the plugin list in either the ```$dataDir/config/.plugins``` file or the ```bajo.plugins``` array within your ```package.json``` file
 
 ## Documentations
 

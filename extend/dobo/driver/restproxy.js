@@ -8,12 +8,12 @@ const optsKeys = {
 async function restproxyDriverFactory () {
   const { join } = this.app.bajo
   const { DoboDriver } = this.app.baseClass
-  const { isString, trimEnd, isPlainObject, trimStart, get, set } = this.app.lib._
+  const { cloneDeep, isString, trimEnd, isPlainObject, trimStart, get, set } = this.app.lib._
 
   class DoboRestproxyDriver extends DoboDriver {
-    static optsKeys = optsKeys
-    static authTypes = authTypes
-    static methods = methods
+    static optsKeys = cloneDeep(optsKeys)
+    static authTypes = cloneDeep(authTypes)
+    static methods = cloneDeep(methods)
 
     constructor (plugin, name, options) {
       super(plugin, name, options)
@@ -67,32 +67,31 @@ async function restproxyDriverFactory () {
             break
         }
       }
-      item.options = item.options ?? {}
-      for (const type in this.constructor.optsKeys) {
-        for (const key of this.constructor.optsKeys[type]) {
-          const [def, org] = key.split(':')
-          const realKey = `${type}Key.${def}`
-          const val = get(item.options, realKey, org ?? def)
-          set(item.options, realKey, val)
-        }
-      }
-      item.options.fieldsMap = item.options.fieldsMap ?? {}
-      if (Array.isArray(item.options.fieldsMap)) {
+      item.fieldsMap = item.fieldsMap ?? {}
+      if (Array.isArray(item.fieldsMap)) {
         const map = {}
-        for (const f of item.options.fieldsMap) {
+        for (const f of item.fieldsMap) {
           const [field, nfield] = f.split(':').map(f => f.trim())
           if (!nfield || (nfield === field)) continue
           map[field] = nfield
         }
-        item.options.fieldsMap = map
+        item.fieldsMap = map
+      }
+      for (const type in this.constructor.optsKeys) {
+        for (const key of this.constructor.optsKeys[type]) {
+          const [def, org] = key.split(':')
+          const realKey = `${type}Key.${def}`
+          const val = get(item, realKey, org ?? def)
+          set(item, realKey, val)
+        }
       }
     }
 
-    _transform = async (data, modelName, reverse) => {
+    _transform = async (data, model, reverse) => {
       const { callHandler } = this.app.bajo
-      const conn = this.app.dobo.getModel(modelName).connection
+      const conn = model.connection
 
-      function mapFields (rec, reverse) {
+      const mapFields = (rec, reverse) => {
         const { get, invert } = this.app.lib._
         const fm = invert(conn.options.fieldsMap)
         const newRec = {}
@@ -107,110 +106,110 @@ async function restproxyDriverFactory () {
       if (!arr) data = [data]
       for (const i in data) {
         let d = data[i]
-        if (conn.options.transformer) d = await callHandler(this, conn.options.transformer, d, modelName)
+        if (conn.options.transformer) d = await callHandler(this, conn.options.transformer, d, model.name)
         data[i] = mapFields(d, reverse)
       }
       return arr ? data : data[0]
     }
 
-    _prepFetch = async (modelName, action, idOrFilter, bodyOrParams) => {
+    async _prepFetch (action, model, idOrFilter, bodyOrParams, options = {}) {
       const { callHandler } = this.app.bajo
       const { pick, cloneDeep, invert, has } = this.app.lib._
       const { isSet } = this.app.lib.aneka
 
-      const conn = this.app.dobo.getModel(modelName).connection
-      const opts = pick(conn.options ?? {}, ['qsKeys', 'responseKeys'])
-      const ext = cloneDeep(conn.options.fetchExtraOpts ?? {})
+      const { options: conn } = model.connection
+      const opts = pick(conn, ['qsKeys', 'responseKeys'])
+      const ext = cloneDeep(conn.fetchExtraOpts ?? {})
 
-      if (!conn.url[action]) throw this.error('methodIsDisabled%s%s', action, modelName)
+      if (!conn.url[action]) throw this.error('methodIsDisabled%s%s', action, model.name)
       let [method, url] = conn.url[action].split(':')
-      let name = modelName
-      if (conn.options.modelResolver) name = await callHandler(this, conn.options.modelResolver, name)
+      let name = model.name
+      if (conn.modelResolver) name = await callHandler(conn.modelResolver, name)
       url = `${conn.url.base}/${url}`.replace('{modelName}', name)
       if (!isPlainObject(idOrFilter)) url = url.replace('{id}', idOrFilter)
-      if (isPlainObject(idOrFilter) && bodyOrParams) opts.body = await this.transform(bodyOrParams, modelName, true)
+      if (isPlainObject(idOrFilter) && bodyOrParams) opts.body = await this._transform(bodyOrParams, model.name, true)
       opts.method = method.toLowerCase()
       opts.headers = opts.headers ?? {}
       opts.params = opts.params ?? {}
       switch (conn.auth) {
         case 'basic': opts.auth = { username: conn.username, password: conn.password }; break
         case 'apiKey': opts.headers.Authorization = `Bearer ${conn.apiKey}`; break
-        case 'jwt': opts.headers.Authorizarion = `Bearer ${conn.jwt}`; break
+        case 'jwt': opts.headers.Authorization = `Bearer ${conn.jwt}`; break
       }
-      const dataKey = get(conn.options.responseKey, 'data')
-      const oldDataKey = get(conn.options.responseKey, 'oldData')
+      const dataKey = get(conn.responseKey, 'data')
+      const oldDataKey = get(conn.responseKey, 'oldData')
       if (isPlainObject(idOrFilter)) {
         // id is actually filter
-        const fm = invert(conn.options.fieldsMap)
+        const fm = invert(conn.fieldsMap)
         const newSort = {}
         for (const s in idOrFilter.sort) {
           newSort[fm[s] ?? s] = idOrFilter.sort[s]
         }
-        opts.params[conn.options.qsKey.sort] = newSort
-        for (const k in conn.options.qsKey) {
+        opts.params[conn.qsKey.sort] = newSort
+        for (const k in conn.qsKey) {
           if (k === 'sort') continue
           if (has(idOrFilter, k)) {
             const val = isPlainObject(idOrFilter[k]) ? JSON.stringify(idOrFilter[k]) : idOrFilter[k]
             if (!isSet(val)) continue
-            opts.params[conn.options.qsKey[k]] = val
+            opts.params[conn.qsKey[k]] = val
           }
           if (has(bodyOrParams, k)) {
             const val = bodyOrParams[k]
             if (!isSet(val)) continue
-            opts.params[conn.options.qsKey[k]] = val
+            opts.params[conn.qsKey[k]] = val
           }
         }
       }
-      return { url, opts, ext, dataKey, oldDataKey, connection: conn }
+      return { url, opts, ext, dataKey, oldDataKey }
     }
 
     async createRecord (model, body = {}, options = {}) {
       const { isEmpty } = this.app.lib._
-      const { url, opts, ext, dataKey } = await this.prepFetch(model, 'create', undefined, body)
-      const resp = await this.fetch(url, opts, ext)
+      const { url, opts, ext, dataKey } = await this._prepFetch('create', model, undefined, body, options)
+      const resp = await this.plugin.fetch(url, opts, ext)
       if (options.noResult) return
-      const data = await this.transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
+      const data = await this._transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
       return { data }
     }
 
     async getRecord (model, id, options = {}) {
       const { isEmpty } = this.app.lib._
-      const { url, opts, ext, dataKey } = await this.prepFetch(model, 'get', id)
-      const resp = await this.fetch(url, opts, ext)
-      const data = await this.transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
+      const { url, opts, ext, dataKey } = await this._prepFetch('get', model, id, null, options)
+      const resp = await this.plugin.fetch(url, opts, ext)
+      const data = await this._transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
       return { data }
     }
 
     async updateRecord (model, id, body = {}, options = {}) {
       const { isEmpty } = this.app.lib._
-      const { url, opts, ext, dataKey, oldDataKey } = await this.prepFetch(model, 'update', id, body)
-      const resp = await this.fetch(url, opts, ext)
-      const data = await this.transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
-      const oldData = await this.transform(isEmpty(oldDataKey) ? resp : resp[oldDataKey], model)
+      const { url, opts, ext, dataKey, oldDataKey } = await this._prepFetch('update', model, id, body, options)
+      const resp = await this.plugin.fetch(url, opts, ext)
+      const data = await this._transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
+      const oldData = await this._transform(isEmpty(oldDataKey) ? resp : resp[oldDataKey], model)
       return { data, oldData }
     }
 
     async removeRecord (model, id, options = {}) {
       const { isEmpty } = this.app.lib._
-      const { url, opts, ext, oldDataKey } = await this.prepFetch(model, 'remove', id)
-      const resp = await this.fetch(url, opts, ext)
-      const oldData = await this.transform(isEmpty(oldDataKey) ? resp : resp[oldDataKey], model)
+      const { url, opts, ext, oldDataKey } = await this._prepFetch('remove', model, id, null, options)
+      const resp = await this.plugin.fetch(url, opts, ext)
+      const oldData = await this._transform(isEmpty(oldDataKey) ? resp : resp[oldDataKey], model)
       return { oldData }
     }
 
     async findRecord (model, filter = {}, options = {}) {
       const { isEmpty } = this.app.lib._
-      const { url, opts, ext, dataKey, connection: conn } = await this.prepFetch(model, 'find')
+      const { url, opts, ext, dataKey } = await this._prepFetch('find', model, filter, null, options)
 
-      const resp = await this.fetch(url, opts, ext)
-      const data = await this.transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
+      const resp = await this.plugin.fetch(url, opts, ext)
+      const data = await this._transform(isEmpty(dataKey) ? resp : resp[dataKey], model)
       const result = {
         data,
-        page: resp[conn.options.responseKey.page] ?? filter.page,
-        limit: resp[conn.options.responseKey.limit] ?? filter.limit
+        page: resp[model.connection.options.responseKey.page] ?? filter.page,
+        limit: resp[model.connection.options.responseKey.limit] ?? filter.limit
       }
       for (const key of ['count', 'pages']) {
-        if (resp[conn.options.responseKey[key]]) result[key] = resp[conn.options.responseKey[key]]
+        if (resp[model.connection.options.responseKey[key]]) result[key] = resp[model.connection.options.responseKey[key]]
       }
       return result
     }

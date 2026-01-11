@@ -1,5 +1,3 @@
-import restproxyDriverFactory from './extend/dobo/driver/restproxy.js'
-
 /**
  * Plugin factory
  *
@@ -8,7 +6,6 @@ import restproxyDriverFactory from './extend/dobo/driver/restproxy.js'
  */
 async function factory (pkgName) {
   const me = this
-  const RestproxyDriver = await restproxyDriverFactory.call(this)
 
   /**
    * DoboRestproxy class
@@ -18,7 +15,6 @@ async function factory (pkgName) {
   class DoboRestproxy extends this.app.baseClass.Base {
     constructor () {
       super(pkgName, me.app)
-      this.baseClass = { RestproxyDriver }
       this.config = {
       }
     }

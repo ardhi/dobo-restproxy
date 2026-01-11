@@ -16,7 +16,7 @@ async function restproxyDriverFactory () {
     static methods = methods
 
     constructor (plugin, name, options) {
-      super(plugin, name)
+      super(plugin, name, options)
       this.idField.name = 'id'
     }
 

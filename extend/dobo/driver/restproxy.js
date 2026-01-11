@@ -18,6 +18,7 @@ async function restproxyDriverFactory () {
     constructor (plugin, name, options) {
       super(plugin, name, options)
       this.idField.name = 'id'
+      this.memory = true
     }
 
     async sanitizeConnection (item) {

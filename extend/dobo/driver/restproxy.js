@@ -1,5 +1,5 @@
 const authTypes = ['basic', 'apiKey', 'jwt']
-const methods = { find: 'GET', get: 'GET', create: 'POST', update: 'PUT', remove: 'DELETE' }
+const methods = { find: 'GET', get: 'GET', create: 'POST', update: 'PUT', remove: 'DELETE', aggregate: 'GET', histogram: 'GET' }
 const optsKeys = {
   qs: ['query', 'page', 'limit', 'sort'],
   response: ['data', 'page', 'count']
@@ -39,7 +39,7 @@ async function restproxyDriverFactory () {
           histogaram: 'GET:{modelName}/stat/histogram'
         }
       } else if (isPlainObject((item.url))) {
-        if (!item.url.base) throw this.error('baseUrlMissing')
+        if (!item.url.base) throw this.plugin.error('baseUrlMissing')
         item.url.base = trimEnd(item.url.base.trim(), '/')
         for (const method in this.constructor.methods) {
           if (!item.url[method]) continue
@@ -49,21 +49,21 @@ async function restproxyDriverFactory () {
             m = this.constructor.methods[method]
           }
           u = trimStart(u, '/')
-          if (!u.includes('{modelName}')) throw this.error('urlPattern%s', method)
-          if (['get', 'update', 'remove'].includes(method) && !u.includes('{id}')) throw this.error('urlIdPattern%s', method)
+          if (!u.includes('{modelName}')) throw this.plugin.error('urlPattern%s', method)
+          if (['get', 'update', 'remove'].includes(method) && !u.includes('{id}')) throw this.plugin.error('urlIdPattern%s', method)
           item.url[method] = `${m}:${u}`
         }
       }
       item.auth = item.auth ?? 'apiKey'
       if (item.auth !== false) {
         const types = this.constructor.authTypes
-        if (!types.includes(item.auth)) throw this.error('onlySupportThese%s', join(types))
+        if (!types.includes(item.auth)) throw this.plugin.error('onlySupportThese%s', join(types))
         switch (item.auth) {
-          case 'apiKey': if (!item.apiKey) throw this.error('isMissing%s', this.t('field.apiKey')); break
-          case 'jwt': if (!item.jwt) throw this.error('isMissing%s', this.t('field.jwt')); break
+          case 'apiKey': if (!item.apiKey) throw this.plugin.error('isMissing%s', this.t('field.apiKey')); break
+          case 'jwt': if (!item.jwt) throw this.plugin.error('isMissing%s', this.t('field.jwt')); break
           case 'basic':
-            if (!item.username) throw this.error('isMissing%s', this.t('field.username'))
-            if (!item.password) throw this.error('isMissing%s', this.t('field.password'))
+            if (!item.username) throw this.plugin.error('isMissing%s', this.t('field.username'))
+            if (!item.password) throw this.plugin.error('isMissing%s', this.t('field.password'))
             break
         }
       }
@@ -87,7 +87,7 @@ async function restproxyDriverFactory () {
       }
     }
 
-    _transform = async (data, model, reverse) => {
+    async _transform (data, model, reverse) {
       const { callHandler } = this.app.bajo
       const conn = model.connection
 
@@ -116,18 +116,21 @@ async function restproxyDriverFactory () {
       const { callHandler } = this.app.bajo
       const { pick, cloneDeep, invert, has } = this.app.lib._
       const { isSet } = this.app.lib.aneka
-
       const { options: conn } = model.connection
       const opts = pick(conn, ['qsKeys', 'responseKeys'])
       const ext = cloneDeep(conn.fetchExtraOpts ?? {})
 
-      if (!conn.url[action]) throw this.error('methodIsDisabled%s%s', action, model.name)
+      if (!conn.url[action]) throw this.plugin.error('methodIsDisabled%s%s', action, model.name)
       let [method, url] = conn.url[action].split(':')
       let name = model.name
       if (conn.modelResolver) name = await callHandler(conn.modelResolver, name)
       url = `${conn.url.base}/${url}`.replace('{modelName}', name)
       if (!isPlainObject(idOrFilter)) url = url.replace('{id}', idOrFilter)
-      if (isPlainObject(idOrFilter) && bodyOrParams) opts.body = await this._transform(bodyOrParams, model.name, true)
+      if (isPlainObject(idOrFilter) && bodyOrParams) {
+        const items = await this._transform(bodyOrParams, model, true)
+        if (['POST', 'PUT'].includes(method)) opts.body = items
+        else opts.params = items
+      }
       opts.method = method.toLowerCase()
       opts.headers = opts.headers ?? {}
       opts.params = opts.params ?? {}

@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-02-02
+
+- [2.2.2] Bug fix on passing query & search strings
+
 ## 2026-01-24
 
 - [2.2.1] Numerous bug fixes

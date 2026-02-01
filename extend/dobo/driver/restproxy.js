@@ -114,7 +114,7 @@ async function restproxyDriverFactory () {
 
     async _prepFetch (action, model, idOrFilter, bodyOrParams, options = {}) {
       const { callHandler } = this.app.bajo
-      const { pick, cloneDeep, invert, has } = this.app.lib._
+      const { pick, cloneDeep, invert, has, isEmpty } = this.app.lib._
       const { isSet } = this.app.lib.aneka
       const { options: conn } = model.connection
       const opts = pick(conn, ['qsKeys', 'responseKeys'])
@@ -126,10 +126,14 @@ async function restproxyDriverFactory () {
       if (conn.modelResolver) name = await callHandler(conn.modelResolver, name)
       url = `${conn.url.base}/${url}`.replace('{modelName}', name)
       if (!isPlainObject(idOrFilter)) url = url.replace('{id}', idOrFilter)
-      if (isPlainObject(idOrFilter) && bodyOrParams) {
-        const items = await this._transform(bodyOrParams, model, true)
-        if (['POST', 'PUT'].includes(method)) opts.body = items
-        else opts.params = items
+      else {
+        if (!isEmpty(idOrFilter.orgQuery)) idOrFilter.query = idOrFilter.orgQuery
+        if (!isEmpty(idOrFilter.orgSearch)) idOrFilter.search = idOrFilter.orgSearch
+        if (bodyOrParams) {
+          const items = await this._transform(bodyOrParams, model, true)
+          if (['POST', 'PUT'].includes(method)) opts.body = items
+          else opts.params = items
+        }
       }
       opts.method = method.toLowerCase()
       opts.headers = opts.headers ?? {}

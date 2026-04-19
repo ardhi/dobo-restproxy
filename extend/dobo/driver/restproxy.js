@@ -114,6 +114,7 @@ async function restproxyDriverFactory () {
 
     async _prepFetch (action, model, idOrFilter, bodyOrParams, options = {}) {
       const { callHandler } = this.app.bajo
+      const { replaceRegexInJson } = this.app.dobo
       const { pick, cloneDeep, invert, has, isEmpty } = this.app.lib._
       const { isSet } = this.app.lib.aneka
       const { options: conn } = model.connection
@@ -156,7 +157,7 @@ async function restproxyDriverFactory () {
         for (const k in conn.qsKey) {
           if (k === 'sort') continue
           if (has(idOrFilter, k)) {
-            const val = isPlainObject(idOrFilter[k]) ? JSON.stringify(idOrFilter[k]) : idOrFilter[k]
+            const val = isPlainObject(idOrFilter[k]) ? replaceRegexInJson(idOrFilter[k]) : idOrFilter[k]
             if (!isSet(val)) continue
             opts.params[conn.qsKey[k]] = val
           }

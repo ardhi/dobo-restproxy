@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-04-19
+
+- [2.2.3] Bug fix in ```_prepFetch()```, now check query for regex existance and parse it if any
+
 ## 2026-02-02
 
 - [2.2.2] Bug fix on passing query & search strings

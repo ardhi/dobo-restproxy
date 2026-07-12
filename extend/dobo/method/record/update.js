@@ -7,15 +7,15 @@ async function recordUpdate ({ schema, id, body, options } = {}) {
   const { importModule } = this.app.bajo
   const { get, isFunction, merge } = this.app.lib._
   const { getInfo } = this.app.dobo
-  const { driver, connection } = getInfo(schema)
+  const { adapter, connection } = getInfo(schema)
   const { dataOnly, oldData, data, responseKey } = connection.options
-  const prefix = driver.provider ? `${driver.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
-  const mod = await importModule(`${prefix}/lib/${driver.type}/record-update.js`)
+  const prefix = adapter.provider ? `${adapter.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
+  const mod = await importModule(`${prefix}/lib/${adapter.type}/record-update.js`)
   if (!mod) return unsupported.call(this)
   let { url, opts, ext } = await prepFetch.call(this, schema, 'update', id, body)
   let resp
   let oldResp
-  if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[driver.ns], { url, opts, ext, schema, id, body, options }))
+  if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[adapter.ns], { url, opts, ext, schema, id, body, options }))
   merge(options, { noTransform: true })
   if (oldData === false) oldResp = await fetchGet.call(this, { schema, id, options })
   if (!resp) resp = await this.fetch(url, opts, ext)

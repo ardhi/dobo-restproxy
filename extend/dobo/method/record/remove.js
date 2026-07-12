@@ -7,14 +7,14 @@ async function recordRemove ({ schema, id, options = {} } = {}) {
   const { importModule } = this.app.bajo
   const { get, isFunction, merge } = this.app.lib._
   const { getInfo } = this.app.dobo
-  const { driver, connection } = getInfo(schema)
+  const { adapter, connection } = getInfo(schema)
   const { dataOnly, oldData, responseKey } = connection.options
-  const prefix = driver.provider ? `${driver.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
-  const mod = await importModule(`${prefix}/lib/${driver.type}/record-remove.js`)
+  const prefix = adapter.provider ? `${adapter.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
+  const mod = await importModule(`${prefix}/lib/${adapter.type}/record-remove.js`)
   if (!mod) return unsupported.call(this)
   let { url, opts, ext } = await prepFetch.call(this, schema, 'remove', id)
   let resp
-  if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[driver.ns], { url, opts, ext, schema, id, options }))
+  if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[adapter.ns], { url, opts, ext, schema, id, options }))
   let oldResp
   merge(options, { noTransform: true })
   if (oldData === false) oldResp = await fetchGet.call(this, { schema, id, options })

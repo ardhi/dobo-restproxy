@@ -4,7 +4,7 @@
 
 > <br />**Attention**: I do NOT accept any pull request at the moment, thanks! ([Why?](wiki/CONTRIBUTING.md))<br /><br />
 
-REST Proxy driver for [Dobo](https://github.com/ardhi/dobo)
+REST Proxy adapter for [Dobo](https://github.com/ardhi/dobo)
 
 ## Installation
 

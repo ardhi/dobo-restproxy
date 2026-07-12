@@ -1,14 +1,14 @@
 import restproxyFactory from './restproxy.js'
 
-async function waibuDriverFactory () {
-  const DoboRestproxyDriver = this.app.baseClass.DoboRestproxyDriver ?? (await restproxyFactory.call(this))
+async function waibuAdapterFactory () {
+  const DoboRestproxyAdapter = this.app.baseClass.DoboRestproxyAdapter ?? (await restproxyFactory.call(this))
 
   const optsKeys = {
-    qs: [...DoboRestproxyDriver.optsKeys.qs, 'bbox', 'bboxLatField', 'bboxLngField', 'match', 'skip', 'sort', 'field', 'group', 'aggregates', 'type'],
-    response: [...DoboRestproxyDriver.optsKeys.response, 'oldData', 'pages']
+    qs: [...DoboRestproxyAdapter.optsKeys.qs, 'bbox', 'bboxLatField', 'bboxLngField', 'match', 'skip', 'sort', 'field', 'group', 'aggregates', 'type'],
+    response: [...DoboRestproxyAdapter.optsKeys.response, 'oldData', 'pages']
   }
 
-  class DoboWaibuDriver extends DoboRestproxyDriver {
+  class DoboWaibuAdapter extends DoboRestproxyAdapter {
     static optsKeys = optsKeys
 
     async sanitizeConnection (item) {
@@ -99,8 +99,8 @@ async function waibuDriverFactory () {
     }
   }
 
-  this.app.baseClass.DoboWaibuDriver = DoboWaibuDriver
-  return DoboWaibuDriver
+  this.app.baseClass.DoboWaibuAdapter = DoboWaibuAdapter
+  return DoboWaibuAdapter
 }
 
-export default waibuDriverFactory
+export default waibuAdapterFactory

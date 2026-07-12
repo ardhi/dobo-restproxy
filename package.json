@@ -1,7 +1,7 @@
 {
   "name": "dobo-restproxy",
-  "version": "2.2.3",
-  "description": "REST Api Proxy driver for Dobo",
+  "version": "2.3.0",
+  "description": "REST Api Proxy adapter for Dobo",
   "main": "index.js",
   "scripts": {
     "build-doc": "jsdoc -c .jsdoc.conf.json",
@@ -21,7 +21,7 @@
     "restproxy",
     "dobo",
     "db",
-    "driver",
+    "adapter",
     "bajo",
     "framework",
     "modular"

@@ -5,12 +5,12 @@ const optsKeys = {
   response: ['data', 'page', 'count']
 }
 
-async function restproxyDriverFactory () {
+async function restproxyAdapterFactory () {
   const { join } = this.app.bajo
-  const { DoboDriver } = this.app.baseClass
+  const { DoboAdapter } = this.app.baseClass
   const { cloneDeep, isString, trimEnd, isPlainObject, trimStart, get, set } = this.app.lib._
 
-  class DoboRestproxyDriver extends DoboDriver {
+  class DoboRestproxyAdapter extends DoboAdapter {
     static optsKeys = cloneDeep(optsKeys)
     static authTypes = cloneDeep(authTypes)
     static methods = cloneDeep(methods)
@@ -228,8 +228,8 @@ async function restproxyDriverFactory () {
     }
   }
 
-  this.app.baseClass.DoboRestproxyDriver = DoboRestproxyDriver
-  return DoboRestproxyDriver
+  this.app.baseClass.DoboRestproxyAdapter = DoboRestproxyAdapter
+  return DoboRestproxyAdapter
 }
 
-export default restproxyDriverFactory
+export default restproxyAdapterFactory

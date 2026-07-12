@@ -7,13 +7,13 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   const { importModule } = this.app.bajo
   const { get, has, isPlainObject, invert, isFunction } = this.app.lib._
   const { getInfo, prepPagination } = this.app.dobo
-  const { driver, connection } = getInfo(schema)
+  const { adapter, connection } = getInfo(schema)
   const { dataOnly, qsKey, responseKey } = connection.options
   if (filter.orgQuery) filter.query = filter.orgQuery
   options.altRels = options.rels
   delete options.rels
-  const prefix = driver.provider ? `${driver.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
-  const mod = await importModule(`${prefix}/lib/${driver.type}/record-find.js`)
+  const prefix = adapter.provider ? `${adapter.provider}:/extend/doboRestproxy` : 'doboRestproxy:/extend/dobo'
+  const mod = await importModule(`${prefix}/lib/${adapter.type}/record-find.js`)
   if (!mod) return unsupported.call(this)
   let { url, opts, ext } = await prepFetch.call(this, schema, 'find')
   const { limit, page, sort } = await prepPagination(filter, schema)
@@ -26,7 +26,7 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   }
   filter.sort = newSort
   let resp
-  if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[driver.ns], { url, opts, ext, schema, filter, options }))
+  if (isFunction(mod)) ({ url, opts, ext, resp } = await mod.call(this.app[adapter.ns], { url, opts, ext, schema, filter, options }))
   for (const k in qsKey) {
     if (has(filter, k)) {
       const val = isPlainObject(filter[k]) ? JSON.stringify(filter[k]) : filter[k]

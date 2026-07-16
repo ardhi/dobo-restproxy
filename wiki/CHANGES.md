@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-07-17
+
+- [2.4.0] Add `modelNameResolver` to allow custom model name resolution for REST API endpoints
+
 ## 2026-07-12
 
 - [2.3.0] Update `driver` to `adapter`

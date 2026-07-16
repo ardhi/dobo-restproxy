@@ -33,6 +33,12 @@ async function factory (pkgName) {
       }
       return result
     }
+
+    modelNameResolver = (name) => {
+      const { getModel } = this.app.dobo
+      const model = getModel(name)
+      return model.baseName
+    }
   }
 
   return DoboRestproxy

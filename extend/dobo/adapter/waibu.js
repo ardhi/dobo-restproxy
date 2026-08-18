@@ -66,7 +66,7 @@ async function waibuAdapterFactory () {
       return result
     }
 
-    async createAggregate (model, filter = {}, params = {}, options = {}) {
+    async aggregate (model, filter = {}, params = {}, options = {}) {
       const { isEmpty } = this.app.lib._
       const { generateId } = this.app.lib.aneka
       const { url, opts, ext, dataKey } = await this._prepFetch('aggregate', model, filter, params, options)
@@ -90,7 +90,7 @@ async function waibuAdapterFactory () {
       return { data }
     }
 
-    async createHistogram (model, filter = {}, params = {}, options = {}) {
+    async histogram (model, filter = {}, params = {}, options = {}) {
       const { isEmpty } = this.app.lib._
       const { url, opts, ext, dataKey } = await this._prepFetch('histogram', model, filter, params, options)
       const resp = await this.plugin.fetch(url, opts, ext)

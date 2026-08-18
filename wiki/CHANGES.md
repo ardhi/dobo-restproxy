@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-08-18
+
+- [2.5.0] Update things to match `dobo@2.38.0`
+
 ## 2026-07-17
 
 - [2.4.0] Add `modelNameResolver` to allow custom model name resolution for REST API endpoints
